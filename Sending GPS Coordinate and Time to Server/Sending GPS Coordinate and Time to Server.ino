@@ -4,11 +4,11 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "REPLACE_WITH_YOUR_SSID";
-const char* password = "REPLACE_WITH_YOUR_PASSWORD";
+const char* ssid = "GIONEE GN5005L";
+const char* password = "00000000";
 
 //Your Domain name with URL path or IP address with path
-String serverName = "http://192.168.1.106:1880/update-sensor";
+String serverName = "https://www.google.com/";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
@@ -18,10 +18,16 @@ unsigned long lastTime = 0;
 // Set timer to 5 seconds (5000)
 unsigned long timerDelay = 5000;
 
+static const int RXPin = 18, TXPin = 19;
+static const uint32_t GPSBaud = 9600;
+
+// The serial connection to the GPS device
+SoftwareSerial ss(RXPin, TXPin);
+
 TinyGPSPlus gps;
 
 String gpslatitude(){
-  Serial.print("GPS Location");
+  Serial.println("GPS Location");
   if(gps.location.isValid()){
     float latitude = gps.location.lat();
     String latitude1 = String(Serial.println(latitude, 6));
@@ -34,7 +40,7 @@ String gpslatitude(){
 
 
   String gpslongitude(){
-  Serial.print("GPS Location");
+  Serial.println("GPS Location");
   if(gps.location.isValid()){
     float longitude = gps.location.lng();
     String longitude1 = String(Serial.println(longitude), 6);
@@ -144,13 +150,13 @@ String gpstime(){
   return time1;
 }
 
-int voltage(){
+//int voltage(){
 
-  int volt = AnalogRead(2);
-  int volt1 = (volt * 3.3)/(4095);
-  return volt1;
+ // int volt = AnalogRead(2);
+//  int volt1 = (volt * 3.3)/(4095);
+ // return volt1;
 
-}
+//}
 
 String senddatarequest(){
   String serverdata = "?GPSLATITUDE="+gpslatitude() + "&GPSLONGITUDE="+gpslongitude() + "&GPSTIME="+gpstime() + "&GPSDATE="+gpsdate() + "&GPS_STATUS=ON";
@@ -163,8 +169,13 @@ void sendtoserver(){
     //Check WiFi connection status
     if(WiFi.status()== WL_CONNECTED){
       HTTPClient http;
+      
+        
+      Serial.println(senddatarequest());
 
       String serverPath = serverName + senddatarequest();
+
+      Serial.println(serverPath);
       
       // Your Domain name with URL path or IP address with path
       http.begin(serverPath.c_str());
@@ -175,8 +186,8 @@ void sendtoserver(){
       if (httpResponseCode>0) {
         Serial.print("HTTP Response code: ");
         Serial.println(httpResponseCode);
-        String payload = http.getString();
-        Serial.println(payload);
+       // String payload = http.getString();
+       // Serial.println(payload);
       }
       else {
         Serial.print("Error code: ");
@@ -188,12 +199,15 @@ void sendtoserver(){
     else {
       Serial.println("WiFi Disconnected");
     }
+    
+    
     lastTime = millis();
   }
 }
 
 void setup() {
   Serial.begin(115200); 
+  ss.begin(GPSBaud);
 
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
@@ -204,11 +218,20 @@ void setup() {
   Serial.println("");
   Serial.print("Connected to WiFi network with IP Address: ");
   Serial.println(WiFi.localIP());
+
  
   Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
+  while (ss.available() > 0){
+    if (gps.encode(ss.read())){
+      Serial.println(gpstime());
+      }
+    }
 }
 
 void loop() {
-  sendtoserver();
+  while (ss.available() > 0)
+      if (gps.encode(ss.read()))
+     // void displayInfo();
+      sendtoserver();
   
 }
