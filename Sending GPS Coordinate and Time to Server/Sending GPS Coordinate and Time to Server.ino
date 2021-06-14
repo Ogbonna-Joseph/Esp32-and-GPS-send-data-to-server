@@ -8,7 +8,7 @@ const char* ssid = "GIONEE GN5005L";
 const char* password = "00000000";
 
 //Your Domain name with URL path or IP address with path
-String serverName = "https://www.google.com/";
+String serverName = "https://omni-chi.vercel.app/api/ping";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
