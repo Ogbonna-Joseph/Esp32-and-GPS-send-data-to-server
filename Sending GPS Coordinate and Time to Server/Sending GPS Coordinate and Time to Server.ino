@@ -27,11 +27,11 @@ SoftwareSerial ss(RXPin, TXPin);
 TinyGPSPlus gps;
 
 String gpslatitude(){
-  Serial.println("GPS Location");
+//  Serial.println("GPS Location");
   if(gps.location.isValid()){
     float latitude = gps.location.lat();
-    String latitude1 = String(Serial.println(latitude, 6));
-    return latitude1;
+    float latitude1 = Serial.print(latitude, 6);
+    return String(latitude);
   }
   else{
     return "000";
@@ -39,19 +39,17 @@ String gpslatitude(){
 }
 
 
-  String gpslongitude(){
-  Serial.println("GPS Location");
+String gpslongitude(){
+ // Serial.println("GPS Location");
   if(gps.location.isValid()){
     float longitude = gps.location.lng();
-    String longitude1 = String(Serial.println(longitude), 6);
-    return longitude1;
+    float longitude1 = Serial.print(longitude, 6);
+    return  String(longitude);
   }
   else{
     return "000";
   }
   }
-
-
 
 String gpsday(){
   if (gps.date.isValid()){
@@ -152,18 +150,25 @@ String gpstime(){
 
 int voltage(){
 
-  int volt = AnalogRead(2);
-  
+  int volt = analogRead(2);
+  Serial.println(volt);
   return volt;
 
 }
 
-String senddatarequest(){
+String senddataonrequest(){
+ 
   String serverdata = "?GPSLATITUDE="+gpslatitude() + "&GPSLONGITUDE="+gpslongitude() + "&GPSTIME="+gpstime() + "&GPSDATE="+gpsdate() + "&GPS_STATUS=ON";
   return serverdata;
 }
 
-void sendtoserver(){
+String senddataoffrequest(){
+ 
+  String serverdata = "?GPSLATITUDE="+gpslatitude() + "&GPSLONGITUDE="+gpslongitude() + "&GPSTIME="+gpstime() + "&GPSDATE="+gpsdate() + "&GPS_STATUS=OFF";
+  return serverdata;
+}
+
+String sendtoserver(String Send_data){
   //Send an HTTP POST request every 10 minutes
   if ((millis() - lastTime) > timerDelay) {
     //Check WiFi connection status
@@ -171,9 +176,9 @@ void sendtoserver(){
       HTTPClient http;
       
         
-      Serial.println(senddatarequest());
+      Serial.println(Send_data);
 
-      String serverPath = serverName + senddatarequest();
+      String serverPath = serverName + Send_data;
 
       Serial.println(serverPath);
       
@@ -231,7 +236,12 @@ void setup() {
 void loop() {
   while (ss.available() > 0)
       if (gps.encode(ss.read()))
-     // void displayInfo();
-      sendtoserver();
+      if (voltage() > 2000){
+        sendtoserver(senddataonrequest());
+      }
+      else{
+        sendtoserver(senddataoffrequest());
+      }
+      
   
 }
