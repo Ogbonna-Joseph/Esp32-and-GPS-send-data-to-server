@@ -150,13 +150,13 @@ String gpstime(){
   return time1;
 }
 
-//int voltage(){
+int voltage(){
 
- // int volt = AnalogRead(2);
-//  int volt1 = (volt * 3.3)/(4095);
- // return volt1;
+  int volt = AnalogRead(2);
+  
+  return volt;
 
-//}
+}
 
 String senddatarequest(){
   String serverdata = "?GPSLATITUDE="+gpslatitude() + "&GPSLONGITUDE="+gpslongitude() + "&GPSTIME="+gpstime() + "&GPSDATE="+gpsdate() + "&GPS_STATUS=ON";
