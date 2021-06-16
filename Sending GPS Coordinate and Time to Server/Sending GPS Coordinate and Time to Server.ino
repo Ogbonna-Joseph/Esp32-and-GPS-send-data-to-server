@@ -23,6 +23,8 @@ unsigned long lastTime = 0;
 // Set timer to 5 seconds (5000)
 unsigned long timerDelay = 5000;
 
+//RX pin is used to recieve signal from the gps
+//TX pin is used to transmit code to the gps
 static const int RXPin = 18, TXPin = 19;
 static const uint32_t GPSBaud = 9600;
 
