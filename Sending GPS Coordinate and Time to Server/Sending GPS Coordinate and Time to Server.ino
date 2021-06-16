@@ -158,7 +158,7 @@ String gpstime(){
 
 int voltage(){
 
-  int volt = analogRead(2);
+  int volt = analogRead(34);
   Serial.println(volt);
   return volt;
 
