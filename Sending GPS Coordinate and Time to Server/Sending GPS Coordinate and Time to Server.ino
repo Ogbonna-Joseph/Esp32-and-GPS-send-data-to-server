@@ -9,6 +9,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
+//Here you put your wifi cresidentials
 const char* ssid = "GIONEE GN5005L";
 const char* password = "00000000";
 
