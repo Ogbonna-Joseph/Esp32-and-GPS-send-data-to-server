@@ -33,7 +33,7 @@ static const uint32_t GPSBaud = 9600;
 SoftwareSerial ss(RXPin, TXPin);
 
 TinyGPSPlus gps;
-
+//Getting the value and coordinate of the latitude
 String gpslatitude(){
 //  Serial.println("GPS Location");
   if(gps.location.isValid()){
