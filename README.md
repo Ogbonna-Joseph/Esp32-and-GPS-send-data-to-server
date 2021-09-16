@@ -21,6 +21,6 @@ And also getting the time and sending then to the server...
 <ul>
   <li>SoftwareSerial library</li>
   <li>TinyGPS++ Library</li>
-  <li>WIFI Library.</li>
+  <li>WIFI Library</li>
   <li>HTTPClient Library</li>
 </ul>
