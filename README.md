@@ -1,5 +1,5 @@
 # Esp32-and-GPS-send-data-to-server
-In this project, the ESP32 board receives a voltage signal from its GPIO pin
+In this project, the ESP32 board receives a voltage signal from its GPIO pin.
 <br>
 And sending the data to a server 
 <br>
